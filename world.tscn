@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://dtg6li4hw2pk"]
+
+[ext_resource type="PackedScene" uid="uid://b5c66t2dyudpi" path="res://scenes/characters/player.tscn" id="1_f3sb7"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_f3sb7"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_fj7yv"]
+sky_material = SubResource("ProceduralSkyMaterial_f3sb7")
+
+[sub_resource type="Environment" id="Environment_tlwt5"]
+background_mode = 2
+sky = SubResource("Sky_fj7yv")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="World" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tlwt5")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.170583, -0.40491, -0.898304, -0.849057, -0.523019, 0.074519, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("1_f3sb7")]
+speed = 0.0
+
+[node name="Ground" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Ground"]
+use_collision = true
+collision_mask = 3
+size = Vector3(50, 0.001, 50)
