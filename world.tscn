@@ -25,7 +25,6 @@ transform = Transform3D(0.170583, -0.40491, -0.898304, -0.849057, -0.523019, 0.0
 shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("1_f3sb7")]
-sprint_speed = 6.0
 
 [node name="Ground" type="Node3D" parent="."]
 
