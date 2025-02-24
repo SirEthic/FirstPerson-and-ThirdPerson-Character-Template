@@ -35,5 +35,8 @@ func handle_input(_delta) -> void:
 	pass
 
 func handle_animations() -> void:
-	if animation_player.has_animation(anim_map[current_state]):
-		animation_player.play(anim_map[current_state])
+	var target_animation = anim_map[current_state]
+	
+	if animation_player.has_animation(target_animation):
+		if animation_player.current_animation != target_animation:
+			animation_player.play(target_animation, 0.25)

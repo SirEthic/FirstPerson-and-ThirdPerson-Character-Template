@@ -54,8 +54,6 @@ func camera() -> void:
 		
 		is_third_person = true
 		is_first_person = false
-		
-		   
 
 func _unhandled_input(event):
 	if Input.is_action_just_pressed("Camera"):
@@ -124,9 +122,7 @@ func handle_input(delta) -> void:
 		if is_third_person:
 			character_model.rotation.y = lerp_angle(character_model.rotation.y, atan2(direction.x, direction.z), delta * 8.0)
 		
-			
 	elif not direction and current_state != State.CROUCH:
 		velocity.x = move_toward(velocity.x , 0, current_speed)
 		velocity.z = move_toward(velocity.z , 0, current_speed)
 		current_state = State.IDLE
-			
