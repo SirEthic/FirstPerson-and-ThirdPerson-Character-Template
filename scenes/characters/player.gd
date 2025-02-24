@@ -40,6 +40,8 @@ func camera() -> void:
 		first_person_camera.current = true
 		first_person_camera.visible = true
 		
+		character_model.rotation.y = head.rotation.y + PI
+		
 		is_third_person = false
 		is_first_person = true
 	
@@ -52,6 +54,8 @@ func camera() -> void:
 		
 		is_third_person = true
 		is_first_person = false
+		
+		   
 
 func _unhandled_input(event):
 	if Input.is_action_just_pressed("Camera"):
@@ -64,7 +68,7 @@ func _unhandled_input(event):
 			third_person_camera.rotation.x = clamp(third_person_camera.rotation.x, deg_to_rad(-40), deg_to_rad(60))
 		elif is_first_person:
 			head.rotate_y(-event.relative.x * sensitivity)
-			character_model.rotate_y(-event.relative.x * sensitivity)
+			character_model.rotation.y = head.rotation.y + PI
 			first_person_camera.rotate_x(-event.relative.y * sensitivity)
 			first_person_camera.rotation.x = clamp(first_person_camera.rotation.x, deg_to_rad(-40), deg_to_rad(60))
 
