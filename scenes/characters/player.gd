@@ -72,12 +72,22 @@ func _unhandled_input(event):
 			first_person_camera.rotate_x(-event.relative.y * sensitivity)
 			first_person_camera.rotation.x = clamp(first_person_camera.rotation.x, deg_to_rad(-40), deg_to_rad(60))
 
-func handle_input(delta) -> void:
-	
+func handle_jump() -> void:
 	if Input.is_action_just_pressed("Jump") and is_on_floor():
 		velocity.y = jump_velocity
 		current_state = State.JUMP
-	
+
+func handle_sprint() -> void:
+	if Input.is_action_pressed("Sprint") and !is_crouching:
+		is_sprinting = true
+		current_speed = sprint_speed
+		current_state = State.RUN
+	else:
+		is_sprinting = false
+		current_speed  = speed
+		current_state = State.WALK
+
+func handle_crouch() -> void:
 	if Input.is_action_just_pressed("Crouch"):
 		is_crouching = !is_crouching
 		is_sprinting = false
@@ -94,6 +104,10 @@ func handle_input(delta) -> void:
 		else:
 			current_speed = speed
 			current_state = State.IDLE
+
+func handle_input(delta) -> void:
+	handle_jump()
+	handle_crouch()
 	
 	if is_crouching:
 		return
@@ -105,17 +119,11 @@ func handle_input(delta) -> void:
 		velocity.x = direction.x * current_speed
 		velocity.z = direction.z * current_speed
 		
+		handle_sprint()
+		
 		if is_third_person:
 			character_model.rotation.y = lerp_angle(character_model.rotation.y, atan2(direction.x, direction.z), delta * 8.0)
 		
-		if Input.is_action_pressed("Sprint") and !is_crouching:
-			is_sprinting = true
-			current_speed = sprint_speed
-			current_state = State.RUN
-		else:
-			is_sprinting = false
-			current_speed  = speed
-			current_state = State.WALK
 			
 	elif not direction and current_state != State.CROUCH:
 		velocity.x = move_toward(velocity.x , 0, current_speed)
