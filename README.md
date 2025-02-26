@@ -1,4 +1,4 @@
-First Person and Third Person Character Cointroller created in Godot 4.4 rc1.
+First Person and Third Person Character Controller created in Godot 4.4 rc1.
 
 ![FirstPerson](https://github.com/user-attachments/assets/c38fa1ff-6c19-40e2-b8ac-a8cbb5c7db93)
 
