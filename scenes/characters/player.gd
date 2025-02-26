@@ -13,7 +13,6 @@ extends Character
 @onready var first_person_camera: Camera3D = $Head/FirstPersonCamera
 @onready var head: Node3D = $Head
 @onready var third_person_camera: Camera3D = $Head/ThirdPersonCamera
-@onready var player: Player = $"."
 
 var is_first_person : bool = false
 var is_third_person : bool = true
@@ -77,10 +76,12 @@ func handle_jump() -> void:
 
 func handle_sprint() -> void:
 	if Input.is_action_pressed("Sprint") and !is_crouching:
+		animation_player.speed_scale = 1.0
 		is_sprinting = true
 		current_speed = sprint_speed
 		current_state = State.RUN
 	else:
+		animation_player.speed_scale = 1.0
 		is_sprinting = false
 		current_speed  = speed
 		current_state = State.WALK
@@ -91,17 +92,34 @@ func handle_crouch() -> void:
 		is_sprinting = false
 		
 		var target_height = -0.4 if is_crouching else 0.4
-		
+				
 		var tween = create_tween()
 		tween.tween_property(first_person_camera, "position:y", first_person_camera.position.y + target_height, 0.2)
 		
 		if is_crouching:
-			current_state = State.CROUCH
+			current_state = State.CROUCHING
 			velocity = Vector3.ZERO
 			current_speed = crouch_speed
+			
+			animation_player.play("Crouch")
+			animation_player.speed_scale = 2.0
+			
+			await animation_player.animation_finished
+			if is_crouching:
+				animation_player.speed_scale = 1.0
+				current_state = State.CROUCH_IDLE
+			
 		else:
-			current_speed = speed
-			current_state = State.IDLE
+			current_state = State.CROUCHING
+			
+			animation_player.play_backwards("Crouch")
+			animation_player.speed_scale = 2.0
+			
+			await animation_player.animation_finished
+			if !is_crouching:
+				animation_player.speed_scale = 1.0
+				current_speed = speed
+				current_state = State.IDLE
 
 func handle_input(delta) -> void:
 	handle_jump()
@@ -122,7 +140,7 @@ func handle_input(delta) -> void:
 		if is_third_person:
 			character_model.rotation.y = lerp_angle(character_model.rotation.y, atan2(direction.x, direction.z), delta * 8.0)
 		
-	elif not direction and current_state != State.CROUCH:
+	elif not direction and current_state != State.CROUCHING:
 		velocity.x = move_toward(velocity.x , 0, current_speed)
 		velocity.z = move_toward(velocity.z , 0, current_speed)
 		current_state = State.IDLE
